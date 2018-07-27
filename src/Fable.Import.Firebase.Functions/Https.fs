@@ -2,10 +2,10 @@ module Fable.Import.Firebase.Functions.Https
 open Fable.Import
 open Fable.Core
 
-type [<AllowNullLiteral>] HttpsFunction =
+type [<AllowNullLiteral>] IHttpsFunction =
     interface end
 
 type [<AllowNullLiteral>] IExports =
-    abstract onRequest: handler: (express.Request -> express.Response -> unit) -> HttpsFunction
+    abstract onRequest: handler: (express.Request -> express.Response -> unit) -> IHttpsFunction
 
-let [<Fable.Core.Import("https", "firebase-functions")>] https: Https.IExports = jsNative
+let [<Fable.Core.Import("https", "firebase-functions")>] https: IExports = jsNative
