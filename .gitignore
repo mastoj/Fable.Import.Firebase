@@ -1,0 +1,12 @@
+packages/
+paket-files/
+paket.local
+
+node_modules/
+
+obj/
+bin/
+output/
+public/
+.fake/
+temp/
