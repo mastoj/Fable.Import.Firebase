@@ -6,7 +6,7 @@ node_modules/
 
 obj/
 bin/
-output/
+.output/
 public/
 .fake/
 temp/
