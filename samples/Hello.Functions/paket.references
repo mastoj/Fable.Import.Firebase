@@ -1,2 +1,4 @@
 Fable.Core
-Fable.Import.Firebase.Functions
+
+group Build
+    dotnet-fable

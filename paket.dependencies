@@ -14,6 +14,8 @@ group Build
 
     framework: netstandard2.0
 
+    clitool dotnet-fable
+
     nuget Fake.DotNet.Cli
     nuget Fake.IO.FileSystem
     nuget Fake.Core.Target
@@ -21,3 +23,5 @@ group Build
     nuget Fake.DotNet.AssemblyInfoFile
     nuget Fake.Core.ReleaseNotes
     nuget Fake.Api.GitHub
+    nuget Fake.IO.FileSystem
+    nuget Fake.JavaScript.NPM

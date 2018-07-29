@@ -1,11 +1,17 @@
 namespace Server
 
 open Fable.Core
+open Fable.Core.JsInterop
 
 module App =
-    open Fable.Import.Firebase.Functions.Https
-    open Fable.Import.express
+    open Fable.Import.Firebase.Functions
+    open Fable.Import
 
-    let private handler req (res: Response) = res.send("Hello world") |> ignore
+    let app = express.Invoke()
+    app.get
+        (U2.Case1 "/hello/:name", 
+            fun (req:express.Request) (res:express.Response) _ ->
+                res.send(sprintf "Hello %O" req.``params``?name) |> box)
+    |> ignore
 
-    let helloWorld = https.onRequest handler
+    let helloWorld = https.onRequest app

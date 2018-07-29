@@ -1,8 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/Fable.Import.Firebase.Functions/Fable.Import.Firebase.Functions.fsproj">
+      <Name>Fable.Import.Firebase.Functions.fsproj</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="App.fs" />
   </ItemGroup>

@@ -1,10 +1,13 @@
 #load ".fake/build.fsx/intellisense.fsx"
+open Fake.IO
+open System.IO
 open Fake.Core
 open Fake.DotNet
 open Fake.IO
 open Fake.IO.Globbing.Operators
 open Fake.Core.TargetOperators
 open Fake.Api
+open Fake.JavaScript
 
 let outputDir = ".output"
 let summary = "Fable bindings for Firebase"
@@ -79,8 +82,40 @@ Target.create "GitHubRelease" (fun _ ->
     |> GitHub.publishDraft
     |> Async.RunSynchronously)
 
+Target.create "CleanFunctionsFolders" (fun _ ->
+    !! "samples/**/functions"
+    |> Shell.cleanDirs 
+)
+
+Target.create "NpmInstall" (fun _ ->
+    Npm.install id
+)
+
+Target.create "CopyNodeFiles" (fun _ ->
+    let functionsFolder = "./samples/Hello.Functions/functions"
+    let packageJsonSource = "./samples/Hello.Functions/package.json"
+    
+    Shell.copyFile functionsFolder packageJsonSource
+
+    let target = DirectoryInfo.ofPath (functionsFolder + "/node_modules")
+    let source = DirectoryInfo.ofPath "./samples/Hello.Functions/node_modules"
+    DirectoryInfo.copyRecursiveTo true target source |> ignore
+)
+
+Target.create "CompileSamples" (fun _ ->
+    let workingDirectory = Path.combine __SOURCE_DIRECTORY__ "samples/Hello.Functions"
+    let result =
+        DotNet.exec
+            (DotNet.Options.withWorkingDirectory workingDirectory)
+            "fable"
+            "webpack -- -p"
+
+    if not result.OK then failwithf "dotnet fable failed with code %i" result.ExitCode
+)
+
 Target.create "All" ignore
 Target.create "BuildPackage" ignore
+Target.create "BuildSamples" ignore
 Target.create "Release" ignore
 
 "Clean"
@@ -94,5 +129,12 @@ Target.create "Release" ignore
     ==> "PublishNuget"
     ==> "GitHubRelease"
     ==> "Release"
+
+"Build"
+    ==> "CleanFunctionsFolders"
+    ==> "NpmInstall"
+    ==> "CompileSamples"
+    ==> "CopyNodeFiles"
+    ==> "BuildSamples"
 
 Target.runOrDefault "Build"
