@@ -5,8 +5,8 @@ open System.Reflection
 [<assembly: AssemblyTitleAttribute("Fable.Import.Firebase.Admin")>]
 [<assembly: AssemblyProductAttribute("Fable.Import.Firebase")>]
 [<assembly: AssemblyDescriptionAttribute("Fable bindings for Firebase")>]
-[<assembly: AssemblyVersionAttribute("0.0.2")>]
-[<assembly: AssemblyFileVersionAttribute("0.0.2")>]
+[<assembly: AssemblyVersionAttribute("0.0.3")>]
+[<assembly: AssemblyFileVersionAttribute("0.0.3")>]
 [<assembly: AssemblyConfigurationAttribute("Release")>]
 do ()
 
@@ -14,6 +14,6 @@ module internal AssemblyVersionInformation =
     let [<Literal>] AssemblyTitle = "Fable.Import.Firebase.Admin"
     let [<Literal>] AssemblyProduct = "Fable.Import.Firebase"
     let [<Literal>] AssemblyDescription = "Fable bindings for Firebase"
-    let [<Literal>] AssemblyVersion = "0.0.2"
-    let [<Literal>] AssemblyFileVersion = "0.0.2"
+    let [<Literal>] AssemblyVersion = "0.0.3"
+    let [<Literal>] AssemblyFileVersion = "0.0.3"
     let [<Literal>] AssemblyConfiguration = "Release"

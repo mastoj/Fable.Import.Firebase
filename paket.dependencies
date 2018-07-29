@@ -5,6 +5,7 @@ framework: netstandard2.0
 nuget FSharp.Core redirects:force
 nuget Fable.Core
 nuget Fable.Import.Express
+nuget Fable.Import.Firebase.Admin
 
 
 // [ FAKE GROUP ]
