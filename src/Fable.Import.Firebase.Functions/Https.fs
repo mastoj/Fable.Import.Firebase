@@ -11,7 +11,8 @@ module rec Https =
         interface end
 
     type [<AllowNullLiteral>] IExports =
-        abstract onRequest: handler: (Express.Request -> Express.Response -> unit) -> HttpsFunction
+        abstract onRequest: handler: (express.Request -> express.Response -> unit) -> HttpsFunction
+        abstract onRequest: handler: express.Application -> HttpsFunction
         abstract HttpsError: HttpsErrorStatic
         /// <summary>Declares a callable method for clients to call using a Firebase SDK.</summary>
         /// <param name="handler">A method that takes a data and context and returns a value.</param>
