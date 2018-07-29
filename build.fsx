@@ -19,6 +19,7 @@ let toLines (strs: string list) = String.concat "\n" strs
 Target.create "Clean" (fun _ ->
     !! "src/**/bin"
     ++ "src/**/obj"
+    ++ outputDir
     |> Shell.cleanDirs 
 )
 
@@ -94,4 +95,4 @@ Target.create "Release" ignore
     ==> "GitHubRelease"
     ==> "Release"
 
-Target.runOrDefault "All"
+Target.runOrDefault "Build"
