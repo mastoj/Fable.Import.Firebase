@@ -125,16 +125,16 @@ Target.create "Release" ignore
     ==> "BuildPackage"
     ==> "All"
 
-"BuildPackage"
-    ==> "PublishNuget"
-    ==> "GitHubRelease"
-    ==> "Release"
-
 "Build"
     ==> "CleanFunctionsFolders"
     ==> "NpmInstall"
     ==> "CompileSamples"
     ==> "CopyNodeFiles"
     ==> "BuildSamples"
+
+"BuildSamples"
+    ==> "PublishNuget"
+    ==> "GitHubRelease"
+    ==> "Release"
 
 Target.runOrDefault "Build"
