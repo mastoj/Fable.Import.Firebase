@@ -12,3 +12,5 @@ public/
 temp/
 
 functions/
+
+src/*/AssemblyInfo.fs
