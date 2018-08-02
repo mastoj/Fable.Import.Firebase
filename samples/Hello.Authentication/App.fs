@@ -1,16 +1,34 @@
 namespace Server
 
+
+
 open System
 open FSharp.Core
 open Fable.Core
-open Fable.Core.JsInterop
 open Fable.Import
 open Fable.Import.Firebase
 open Fable.Import.Firebase.Functions
 open Fable.PowerPack
-
+open Fable.Core.JsInterop
 
 module App =
+    module private ExpressHelpers =
+        let toRequestHandler handler =
+            new System.Func<express.Request, express.Response, (obj -> unit), obj>(handler)
+
+        let returnJson (res: express.Response) x =
+            res.setHeader("Content-Type", U2.Case1 "application/json")
+            res.json(x) |> box
+
+        let getPath path handler (app: express.Express) =
+            let requestHandler = handler |> toRequestHandler
+            app.get(U2.Case1 "/hello", requestHandler) |> ignore
+            app
+
+        let inline useMiddleware (x) (app: express.Express) =
+            app.``use``([|x|]) |> ignore
+            app
+
     admin.initializeApp() |> ignore
 
     [<Pojo>]
@@ -79,15 +97,27 @@ module App =
 
     let validateFirebaseIdToken' = new System.Func<express.Request, express.Response, obj -> unit, obj>(validateFirebaseIdToken)
 
-    let expressApp = express.Invoke()
+    [<Pojo>]
+    type Hello = {
+        FirstName: string
+        LastName: string
+    }
 
-    expressApp.``use``(cookieParser()) |> ignore
-    expressApp.``use``(cors({origin = "http://localhost:5000"; credentials = true})) |> ignore
-    expressApp.``use``(validateFirebaseIdToken) |> ignore
-    expressApp.get
-        (U2.Case1 "/hello", 
-            fun (req:express.Request) (res:express.Response) _ ->
-                res.send(sprintf "Hello %O" req.user) |> box)
+    let handler (req:express.Request) (res:express.Response) _ =
+        let user = req.user
+        let name: obj = user?name |> unbox
+        let hello = {
+            FirstName = (name :?> string)
+            LastName = "Doe"
+        }
+        ExpressHelpers.returnJson res hello
+
+    let expressApp = express.Invoke()
+    expressApp
+    |> ExpressHelpers.useMiddleware (cookieParser())
+    |> ExpressHelpers.useMiddleware (cors({origin = "http://localhost:5000"; credentials = true}))
+    |> ExpressHelpers.useMiddleware (validateFirebaseIdToken |> ExpressHelpers.toRequestHandler)
+    |> ExpressHelpers.getPath "/hello" handler
     |> ignore
 
     let app = https.onRequest expressApp
