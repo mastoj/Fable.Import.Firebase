@@ -457,8 +457,22 @@ module Admin =
         abstract condition: string with get, set
 
     module Firestore =
+        type [<AllowNullLiteral>] DocRef =
+            abstract id: string with get, set
+
+        type [<AllowNullLiteral>] Document =
+            inherit DocRef
+            abstract data: unit -> obj
+            abstract delete: unit -> Promise<unit>
+            abstract set<'a> : 'a -> Promise<unit>
+            abstract update<'a> : 'a -> Promise<unit>
+
+        type [<AllowNullLiteral>] Collection =
+            abstract add<'a> : ('a) -> Promise<DocRef>
+            abstract get: unit -> Promise<Document[]>
 
         type [<AllowNullLiteral>] Firestore =
-            interface end
+            abstract collection: string -> Collection
+            abstract doc: string -> Document
 
     type [<AllowNullLiteral>] Bucket = interface end
