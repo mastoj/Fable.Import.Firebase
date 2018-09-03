@@ -1,3 +1,4 @@
+* 0.0.7 - Basic firestore support
 * 0.0.6 - Full admin support and authentication sample
 * 0.0.5 - Overload for onRequest that takes an express app
 * 0.0.4 - Full implementation of current functions https bindings

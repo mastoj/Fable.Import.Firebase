@@ -1,0 +1,5 @@
+Fable.Core
+Fable.PowerPack
+
+group Build
+    dotnet-fable

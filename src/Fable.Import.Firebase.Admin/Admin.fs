@@ -6,8 +6,8 @@ open System
 let [<Import("*","firebase-admin")>] admin: Admin.IExports = jsNative
 
 module Admin =
-    let [<Import("credential","firebase-admin/admin")>] credential: Credential.IExports = jsNative
-    let [<Import("database","firebase-admin/admin")>] database: Database.IExports = jsNative
+    let [<Import("credential","firebase-admin")>] credential: Credential.IExports = jsNative
+    let [<Import("database","firebase-admin")>] database: Database.IExports = jsNative
 
     type [<AllowNullLiteral>] IExports =
             abstract SDK_VERSION: string
@@ -27,6 +27,31 @@ module Admin =
         abstract databaseURL: string option with get, set
         abstract storageBucket: string option with get, set
         abstract projectId: string option with get, set
+
+    module AppOptions =
+        let defaultOptions() = 
+            let mutable credential: Admin.Credential.Credential option = None
+            let mutable databaseAuthVariableOverride: obj option = None
+            let mutable databaseURL: string option = None
+            let mutable storageBucket: string option = None
+            let mutable projectId: string option = None
+            { new AppOptions with
+                member this.credential
+                    with get() = credential
+                    and set v = credential <- v
+                member this.databaseAuthVariableOverride
+                    with get() = databaseAuthVariableOverride
+                    and set v = databaseAuthVariableOverride <- v
+                member this.databaseURL
+                    with get() = databaseURL
+                    and set v = databaseURL <- v
+                member this.storageBucket
+                    with get() = storageBucket
+                    and set v = storageBucket <- v
+                member this.projectId
+                    with get() = projectId
+                    and set v = projectId <- v
+            }
 
     type [<AllowNullLiteral>] ServiceAccount =
         abstract projectId: string option with get, set
@@ -457,8 +482,29 @@ module Admin =
         abstract condition: string with get, set
 
     module Firestore =
+        type [<AllowNullLiteral>] DocRef =
+            abstract id: string with get, set
+
+        type [<AllowNullLiteral>] Snapshot = interface end
+
+        type SnapshotHandler = Snapshot -> unit
+        type ErrorHandler = obj -> unit
+        type Unsubscribe = unit -> unit
+
+        type [<AllowNullLiteral>] Document =
+            inherit DocRef
+            abstract data: unit -> obj
+            abstract delete: unit -> Promise<unit>
+            abstract set<'a> : 'a -> Promise<unit>
+            abstract update<'a> : 'a -> Promise<unit>
+
+        type [<AllowNullLiteral>] Collection =
+            abstract add<'a> : ('a) -> Promise<DocRef>
+            abstract get: unit -> Promise<Document[]>
+            abstract onSnapshot: (SnapshotHandler * ErrorHandler) -> Unsubscribe
 
         type [<AllowNullLiteral>] Firestore =
-            interface end
+            abstract collection: string -> Collection
+            abstract doc: string -> Document
 
     type [<AllowNullLiteral>] Bucket = interface end
